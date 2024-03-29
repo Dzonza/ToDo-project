@@ -1,0 +1,134 @@
+<%- include('partials/header.ejs'); -%> <% if (locals.users) {%>
+<form action="/user" class="tab-view tab-view-height-auto" method="post">
+  <% users.forEach(function(user) { %>
+  <input type="submit" name="user" value="<%= user.id %>" id="<%= user.id %>" />
+  <label for="<%= user.id %>" style="background-color: <%= user.color %>">
+    <%= user.name.substring(0,6) %>
+  </label>
+  <% }); %>
+
+  <input type="submit" name="add" value="new" id="tab" />
+  <label for="tab" style="background-color: #f1e8e8; color: black">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="16"
+      height="16"
+      fill="currentColor"
+      class="bi bi-person-plus-fill"
+      viewBox="0 0 16 16"
+    >
+      <path
+        d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"
+      />
+      <path
+        fill-rule="evenodd"
+        d="M13.5 5a.5.5 0 0 1 .5.5V7h1.5a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0V8h-1.5a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5"
+      />
+    </svg>
+  </label>
+</form>
+
+<div class="box" id="heading">
+  <h1><%= listTitle %></h1>
+</div>
+<div class="box">
+  <% for(let item of listItems){%>
+  <div class="item">
+    <form action="/delete" method="post">
+      <input
+        type="checkbox"
+        onchange="this.form.submit()"
+        name="deleteItemId"
+        value="<%= item.id %>"
+      />
+    </form>
+
+    <p id="title<%=item.id%>"><%= item.title %></p>
+
+    <form class="edit" action="/edit" method="post">
+      <input type="hidden" name="updatedItemId" value="<%= item.id %>" />
+      <input
+        id="input<%=item.id%>"
+        type="text"
+        name="updatedItemTitle"
+        value="<%= item.title %>"
+        autocomplete="off"
+        autofocus="true"
+        hidden="true"
+      />
+      <button id="done<%=item.id%>" class="edit" type="submit" hidden>
+        <img
+          class="icon"
+          src="/assets/icons/check-solid.svg"
+          alt="tick image"
+        />
+      </button>
+    </form>
+    <button
+      id="edit<%=item.id%>"
+      class="edit"
+      onclick="handler('<%=item.id%>')"
+    >
+      <img
+        class="icon"
+        src="/assets/icons/pencil-solid.svg"
+        alt="pencil image"
+      />
+    </button>
+  </div>
+  <% } %>
+
+  <form class="item" action="/add" method="post">
+    <input
+      type="text"
+      name="newItem"
+      placeholder="New Item"
+      autocomplete="off"
+      autofocus="true"
+      required
+    />
+    <button class="add" type="submit" name="list" value="<%= listTitle %>">
+      +
+    </button>
+  </form>
+</div>
+<form action="/deleteMember" method="post">
+  <button type="submit" id="deleteMember">Delete Member</button>
+</form>
+<script>
+  function handler(id) {
+    document.getElementById("title" + id).setAttribute("hidden", true);
+    document.getElementById("edit" + id).setAttribute("hidden", true);
+    document.getElementById("done" + id).removeAttribute("hidden");
+    document.getElementById("input" + id).removeAttribute("hidden");
+  }
+</script>
+<% } else { %>
+<div id="noUsersPage">
+  <form action="/user" class="tab-view tab-view-height-auto" method="post">
+    <input type="submit" name="add" value="new" id="tab" />
+    <label for="tab" style="background-color: #f1e8e8; color: black">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="16"
+        height="16"
+        fill="currentColor"
+        class="bi bi-person-plus-fill"
+        viewBox="0 0 16 16"
+      >
+        <path
+          d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"
+        />
+        <path
+          fill-rule="evenodd"
+          d="M13.5 5a.5.5 0 0 1 .5.5V7h1.5a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0V8h-1.5a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5"
+        />
+      </svg>
+    </label>
+  </form>
+  <p id="noUsersMessage">
+    There are no members<br />
+    Become one <br />😊
+  </p>
+</div>
+<% } %> <%- include('partials/footer.ejs'); -%>

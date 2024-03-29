@@ -1,0 +1,4 @@
+/node_modules/
+.env
+solution.js
+queries.sql
