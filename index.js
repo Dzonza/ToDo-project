@@ -1,15 +1,12 @@
 import express from "express";
 import bodyParser from "body-parser";
-import ejs from "ejs";
 import pg from "pg";
 import { config } from "dotenv";
 
 config();
 const app = express();
 const port = 3000;
-app.set("view engine", "ejs");
 
-app.engine("ejs", require("ejs").__express);
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
