@@ -13,7 +13,7 @@ const { Pool } = pg;
 const db = new Pool({
   connectionString: process.env.POSTGRES_URL,
 });
-
+db.connect();
 let currentUserId;
 let users = [];
 let items = [];
