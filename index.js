@@ -1,5 +1,6 @@
 import express from "express";
 import bodyParser from "body-parser";
+import ejs from "ejs";
 import pg from "pg";
 import { config } from "dotenv";
 
