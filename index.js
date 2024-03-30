@@ -59,7 +59,7 @@ app.get("/", async (req, res) => {
       });
     }
   } catch (err) {
-    console.error("Error:", error);
+    console.error("Error:", err);
     res.status(500).send("Internal Server Error");
   }
 });
