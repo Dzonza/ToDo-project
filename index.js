@@ -19,7 +19,7 @@ const pool = new Pool({
 let currentUserId;
 let users = [];
 let items = [];
-
+app.get("/favicon.ico", (req, res) => res.status(204));
 async function getCurrentUser() {
   const result = await pool.query("select * from users");
   if (result.rows.length > 0) {
