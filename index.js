@@ -70,7 +70,8 @@ app.post("/add", async (req, res) => {
     ]);
     res.redirect("/");
   } catch (err) {
-    console.log(err);
+    console.error("Error:", err);
+    res.status(500).send("Internal Server Error");
   }
 });
 
@@ -82,7 +83,8 @@ app.post("/edit", async (req, res) => {
     ]);
     res.redirect("/");
   } catch (err) {
-    console.log(err);
+    console.error("Error:", err);
+    res.status(500).send("Internal Server Error");
   }
 });
 
@@ -91,15 +93,21 @@ app.post("/delete", async (req, res) => {
     await db.query("DELETE FROM items WHERE id = $1", [req.body.deleteItemId]);
     res.redirect("/");
   } catch (err) {
-    console.log(err);
+    console.error("Error:", err);
+    res.status(500).send("Internal Server Error");
   }
 });
 app.post("/user", async (req, res) => {
-  if (req.body.add === "new") {
-    res.render("new.ejs");
-  } else {
-    currentUserId = req.body.user;
-    res.redirect("/");
+  try {
+    if (req.body.add === "new") {
+      res.render("new.ejs");
+    } else {
+      currentUserId = req.body.user;
+      res.redirect("/");
+    }
+  } catch (err) {
+    console.error("Error:", err);
+    res.status(500).send("Internal Server Error");
   }
 });
 
@@ -114,7 +122,8 @@ app.post("/new", async (req, res) => {
     currentUserId = result.rows[0].id;
     res.redirect("/");
   } catch (err) {
-    console.log(err);
+    console.error("Error:", err);
+    res.status(500).send("Internal Server Error");
   }
 });
 
@@ -126,7 +135,8 @@ app.post("/deleteMember", async (req, res) => {
     currentUserId = await getFirstUser();
     res.redirect("/");
   } catch (err) {
-    console.log(err);
+    console.error("Error:", err);
+    res.status(500).send("Internal Server Error");
   }
 });
 app.listen(port, () => {
