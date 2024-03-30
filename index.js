@@ -18,7 +18,7 @@ let currentUserId;
 let users = [];
 let items = [];
 
-async function getCurrentUser(currentUserId) {
+async function getCurrentUser() {
   const result = await db.query("select * from users");
   if (result.rows.length > 0) {
     users = result.rows;
@@ -39,7 +39,7 @@ async function getFirstUser() {
 }
 app.get("/", async (req, res) => {
   try {
-    const currentUser = await getCurrentUser(currentUserId);
+    const currentUser = await getCurrentUser();
     if (users.length > 0) {
       const result = await db.query("SELECT * FROM items where user_id = $1", [
         currentUserId,
