@@ -1,9 +1,7 @@
 import express from "express";
 import bodyParser from "body-parser";
 import pg from "pg";
-import { config } from "dotenv";
 
-config();
 const app = express();
 const port = 3000;
 
@@ -12,7 +10,7 @@ app.use(express.static("public"));
 
 const { Pool } = pg;
 
-const pool = new Pool({
+const db = new Pool({
   connectionString: process.env.POSTGRES_URL,
 });
 
@@ -21,7 +19,7 @@ let users = [];
 let items = [];
 app.get("/favicon.ico", (req, res) => res.status(204));
 async function getCurrentUser() {
-  const result = await pool.query("select * from users");
+  const result = await db.query("select * from users");
   if (result.rows.length > 0) {
     users = result.rows;
     return users.find((user) => user.id == currentUserId);
@@ -31,7 +29,7 @@ async function getCurrentUser() {
   }
 }
 async function getFirstUser() {
-  const result = await pool.query("select id from users");
+  const result = await db.query("select id from users");
   if (result.rows.length > 0) {
     return result.rows[0].id;
   } else {
@@ -43,10 +41,9 @@ app.get("/", async (req, res) => {
   try {
     const currentUser = await getCurrentUser();
     if (users.length > 0) {
-      const result = await pool.query(
-        "SELECT * FROM items where user_id = $1",
-        [currentUserId]
-      );
+      const result = await db.query("SELECT * FROM items where user_id = $1", [
+        currentUserId,
+      ]);
       res.render("index.ejs", {
         listTitle: currentUser.name + "'s list",
         users: users,
@@ -67,7 +64,7 @@ app.get("/", async (req, res) => {
 app.post("/add", async (req, res) => {
   const item = req.body.newItem;
   try {
-    await pool.query("INSERT INTO items (title, user_id) VALUES ($1, $2)", [
+    await db.query("INSERT INTO items (title, user_id) VALUES ($1, $2)", [
       item,
       currentUserId,
     ]);
@@ -79,7 +76,7 @@ app.post("/add", async (req, res) => {
 
 app.post("/edit", async (req, res) => {
   try {
-    await pool.query("UPDATE items SET title = $1 WHERE id = $2", [
+    await db.query("UPDATE items SET title = $1 WHERE id = $2", [
       req.body.updatedItemTitle,
       req.body.updatedItemId,
     ]);
@@ -91,9 +88,7 @@ app.post("/edit", async (req, res) => {
 
 app.post("/delete", async (req, res) => {
   try {
-    await pool.query("DELETE FROM items WHERE id = $1", [
-      req.body.deleteItemId,
-    ]);
+    await db.query("DELETE FROM items WHERE id = $1", [req.body.deleteItemId]);
     res.redirect("/");
   } catch (err) {
     console.log(err);
@@ -112,7 +107,7 @@ app.post("/new", async (req, res) => {
   const name = req.body.name;
   const color = req.body.color;
   try {
-    const result = await pool.query(
+    const result = await db.query(
       "INSERT INTO users (name, color) VALUES ($1, $2) RETURNING id",
       [name, color]
     );
@@ -125,8 +120,8 @@ app.post("/new", async (req, res) => {
 
 app.post("/deleteMember", async (req, res) => {
   try {
-    await pool.query("DELETE FROM items WHERE user_id = $1", [currentUserId]);
-    await pool.query("DELETE FROM users WHERE id = $1", [currentUserId]);
+    await db.query("DELETE FROM items WHERE user_id = $1", [currentUserId]);
+    await db.query("DELETE FROM users WHERE id = $1", [currentUserId]);
 
     currentUserId = await getFirstUser();
     res.redirect("/");
