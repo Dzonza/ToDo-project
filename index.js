@@ -18,7 +18,7 @@ let users = [];
 let items = [];
 
 async function getCurrentUser() {
-  const result = await db.query("select * from users");
+  const result = await pool.query("select * from users");
   if (result.rows.length > 0) {
     users = result.rows;
     return users.find((user) => user.id == currentUserId);
