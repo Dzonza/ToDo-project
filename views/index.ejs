@@ -105,7 +105,12 @@
 </script>
 <% } else { %>
 <div id="noUsersPage">
-  <form action="/user" class="tab-view tab-view-height-auto" method="post">
+  <form
+    action="/user"
+    class="tab-view tab-view-height-auto"
+    id="form-noUsers"
+    method="post"
+  >
     <input type="submit" name="add" value="new" id="tab" />
     <label for="tab" style="background-color: #f1e8e8; color: black">
       <svg
