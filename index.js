@@ -8,24 +8,30 @@ const port = 3000;
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
-const { Pool } = pg;
+// const { Pool } = pg;
 
-const db = new Pool({
-  connectionString: process.env.POSTGRES_URL,
+// const db = new Pool({
+//   connectionString: process.env.POSTGRES_URL,
+// });
+const db = new pg.Client({
+  user: "postgres",
+  host: "localhost",
+  database: "permalist",
+  password: "pajser96",
+  port: 5432,
 });
+
 db.connect();
 let currentUserId;
-let users = [];
-let items = [];
+let createdUsers = [];
 
 async function getCurrentUser() {
   const result = await db.query("select * from users");
   if (result.rows.length > 0) {
-    users = result.rows;
-    return users.find((user) => user.id == currentUserId);
+    createdUsers = result.rows;
+    return createdUsers.find((user) => user.id == currentUserId);
   } else {
-    users = [];
-    return users;
+    return null;
   }
 }
 async function getFirstUser() {
@@ -33,20 +39,22 @@ async function getFirstUser() {
   if (result.rows.length > 0) {
     return result.rows[0].id;
   } else {
-    users = [];
-    return users;
+    return null;
   }
 }
 app.get("/", async (req, res) => {
   try {
+    if (!currentUserId) {
+      currentUserId = await getFirstUser();
+    }
     const currentUser = await getCurrentUser();
-    if (users.length > 0) {
+    if (currentUser) {
       const result = await db.query("SELECT * FROM items where user_id = $1", [
         currentUserId,
       ]);
       res.render("index.ejs", {
         listTitle: currentUser.name + "'s list",
-        users: users,
+        users: createdUsers,
         listItems: result.rows,
         color: currentUser.color,
       });

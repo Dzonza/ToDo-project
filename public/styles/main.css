@@ -123,7 +123,7 @@ input[type="text"]:focus {
   position: relative;
   display: inline-block;
   min-width: 60px;
-  margin: 20px 7px 0 7px;
+  margin: 0px 7px 0 7px;
   padding: 10px;
   border-radius: 12px;
   outline: none;
@@ -236,7 +236,7 @@ input#nameId {
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  height: 95vh;
+  height: 70vh;
 }
 #noUsersMessage {
   font-size: 25px;
@@ -322,4 +322,17 @@ label span.purple {
 }
 label span.pink {
   background: #e03997;
+}
+nav {
+  padding: 10px 20px;
+  margin-bottom: 10px;
+}
+img {
+  width: 70px;
+  height: 60px;
+}
+@media screen and (max-width: 500px) {
+  nav {
+    text-align: center;
+  }
 }
