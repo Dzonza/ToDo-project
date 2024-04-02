@@ -17,6 +17,7 @@ body {
 main {
   text-align: center;
   flex: 1;
+  padding: 0 15px;
 }
 h1 {
   color: #fff;
@@ -64,8 +65,8 @@ p {
 
 form {
   text-align: center;
-  margin-left: 20px;
 }
+
 #form-noUsers {
   text-align: center;
   margin: 0;
