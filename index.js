@@ -8,10 +8,17 @@ const port = 3000;
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
-const { Pool } = pg;
+// const { Pool } = pg;
 
-const db = new Pool({
-  connectionString: process.env.POSTGRES_URL,
+// const db = new Pool({
+//   connectionString: process.env.POSTGRES_URL,
+// });
+const db = new pg.Client({
+  user: "postgres",
+  host: "localhost",
+  database: "permalist",
+  password: "pajser96",
+  port: 5432,
 });
 
 db.connect();
