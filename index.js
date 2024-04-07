@@ -12,14 +12,13 @@ const { Pool } = pg;
 
 const db = new Pool({
   connectionString: process.env.POSTGRES_URL,
-  ssl: { rejectUnauthorized: false },
 });
-db.connect();
+
 db.on("error", (e) => {
   console.error("Database error", e);
   db = null;
 });
-
+db.connect();
 let currentUserId;
 let createdUsers = [];
 
